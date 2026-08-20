@@ -427,8 +427,9 @@ Modern C++ generally prefers `using`.
 
 ---
 
-````markdown
 ## 1.14 Size, Alignment, Ranges & Precision
+````markdown
+## Size, Alignment, Ranges & Precision
 
 ### `sizeof`
 
