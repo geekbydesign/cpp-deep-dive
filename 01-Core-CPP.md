@@ -6,7 +6,6 @@
 >
 > **Scope:** Types, variables, scope, lifetime, storage duration, `const`, `static`, `constexpr`, `auto`, `decltype`, references, pointers, casting, functions, overloading, `inline`, `extern`, and namespaces.
 >
-> These notes cover the concepts completely within the scope of Module 1. Topics that belong primarily to later modules are introduced only where necessary.
 
 ---
 
