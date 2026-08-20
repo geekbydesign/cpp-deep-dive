@@ -427,6 +427,244 @@ Modern C++ generally prefers `using`.
 
 ---
 
+````markdown
+## 1.14 Size, Alignment, Ranges & Precision
+
+### `sizeof`
+
+Returns the size of a type/object in **bytes**.
+
+```cpp
+sizeof(int);
+sizeof(double);
+
+int x;
+sizeof(x);
+````
+
+* Return type: `std::size_t`
+* `sizeof(char) == 1` is guaranteed.
+* Exact sizes are implementation-dependent.
+
+---
+
+### `alignof`
+
+Returns the **alignment requirement** of a type.
+
+```cpp
+alignof(int);
+alignof(double);
+```
+
+```text
+sizeof  → size in bytes
+alignof → alignment requirement
+```
+
+---
+
+### `CHAR_BIT`
+
+Number of **bits in one byte**.
+
+```cpp
+#include <climits>
+
+std::cout << CHAR_BIT;
+```
+
+Typically:
+
+```text
+CHAR_BIT = 8
+```
+
+Important:
+
+```text
+sizeof(char) == 1
+```
+
+is guaranteed, but 1 byte is not required to be 8 bits.
+
+---
+
+### Minimum Guaranteed Sizes
+
+| Type        | Minimum Size |
+| ----------- | -----------: |
+| `char`      |       8 bits |
+| `short`     |      16 bits |
+| `int`       |      16 bits |
+| `long`      |      32 bits |
+| `long long` |      64 bits |
+
+Guaranteed ordering:
+
+```text
+char <= short <= int <= long <= long long
+```
+
+The actual size is implementation-dependent.
+
+---
+
+### Typical Sizes: Windows vs Linux
+
+| Type        | Windows/MSVC | Linux/GCC 64-bit |
+| ----------- | -----------: | ---------------: |
+| `char`      |       1 byte |           1 byte |
+| `short`     |      2 bytes |          2 bytes |
+| `int`       |      4 bytes |          4 bytes |
+| `long`      |      4 bytes |          8 bytes |
+| `long long` |      8 bytes |          8 bytes |
+| `float`     |      4 bytes |          4 bytes |
+| `double`    |      8 bytes |          8 bytes |
+
+**Important:** `long` is a common platform difference.
+
+---
+
+### Integer Ranges
+
+For an N-bit integer:
+
+```text
+Signed:
+-2^(N-1) to 2^(N-1) - 1
+
+Unsigned:
+0 to 2^N - 1
+```
+
+Typical 32-bit ranges:
+
+```text
+int:
+-2,147,483,648 to 2,147,483,647
+
+unsigned int:
+0 to 4,294,967,295
+```
+
+### Signed vs Unsigned
+
+```text
+Signed   → negative + positive values
+Unsigned → only non-negative values
+```
+
+Important:
+
+```text
+Unsigned overflow → defined modulo arithmetic
+Signed overflow   → undefined behavior
+```
+
+Example:
+
+```cpp
+unsigned int x = 0;
+--x;    // wraps to UINT_MAX
+```
+
+---
+
+### Floating-Point Precision
+
+| Type          |             Typical Size |        Approx. Precision |
+| ------------- | -----------------------: | -----------------------: |
+| `float`       |                  4 bytes |      ~6–7 decimal digits |
+| `double`      |                  8 bytes |    ~15–16 decimal digits |
+| `long double` | implementation-dependent | implementation-dependent |
+
+```text
+Range    → how large/small a value can be
+Precision → how many significant digits can be represented
+```
+
+Floating-point calculations may have rounding errors:
+
+```cpp
+double x = 0.1 + 0.2;
+// Don't assume x == 0.3 exactly
+```
+
+---
+
+### `std::numeric_limits`
+
+Use `<limits>` to get type limits.
+
+```cpp
+#include <limits>
+
+std::numeric_limits<int>::min();
+std::numeric_limits<int>::max();
+
+std::numeric_limits<double>::max();
+std::numeric_limits<double>::lowest();
+```
+
+**Trap:**
+
+```cpp
+std::numeric_limits<double>::min()
+```
+
+means the smallest positive normalized value, not the most negative value.
+
+Use:
+
+```cpp
+std::numeric_limits<double>::lowest();
+```
+
+for the lowest value.
+
+---
+
+### Fixed-Width Integers
+
+Use `<cstdint>` when exact width matters:
+
+```cpp
+std::int8_t
+std::int16_t
+std::int32_t
+std::int64_t
+
+std::uint8_t
+std::uint16_t
+std::uint32_t
+std::uint64_t
+```
+
+Useful for embedded systems, protocols, binary formats, and cross-platform code.
+
+---
+
+### Interview Recall
+
+```text
+sizeof()    → size in bytes
+alignof()   → alignment requirement
+CHAR_BIT    → bits per byte
+int         → typically 4 bytes
+long        → 4 bytes Windows / 8 bytes Linux 64-bit
+long long   → typically 8 bytes
+float       → ~6–7 digits precision
+double      → ~15–16 digits precision
+```
+
+**Never say:** "`int` is always 4 bytes."
+
+**Say:** "`int` is typically 4 bytes, but its exact size is implementation-dependent."
+
+```
+```
+
 # 2. Variables
 
 ## 2.1 Variable declaration
